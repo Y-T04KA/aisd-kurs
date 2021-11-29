@@ -3,7 +3,6 @@
 // weighted graph
 #include<iostream>
 #include<vector>
-#include<algorithm>//TODO - WRITE OWN SORTING
 using namespace std;
 
 // Creating shortcut for an integer pair
@@ -14,6 +13,8 @@ struct Graph
 {
 	int V, E;
 	vector< pair<int, iPair> > edges;
+	vector< pair<int, iPair> > tmp;
+    
 
 	// Constructor
 	Graph(int V, int E)
@@ -28,7 +29,7 @@ struct Graph
 		edges.push_back({ w, {u, v} });
 	}
 
-	//void sort( )
+	//void sort(vector vec.begin(), vector vec.end())
 	// Function to find MST using Kruskal's
 	// MST algorithm
 	int kruskalMST();
@@ -95,7 +96,17 @@ int Graph::kruskalMST()
 	int mst_wt = 0; // Initialize result
 
 	// Sort edges in increasing order on basis of cost
-	sort(edges.begin(), edges.end());
+	//sort(edges.begin(), edges.end());
+	for (int i = 0; i < edges.size(); i++) {
+		for (int j = i; j < (edges.size()); j++) {
+			if (edges[i] > edges[j]) {
+				swap(edges[i], edges[j]);
+				//tmp.push_back(edges[i]);
+				//edges[i] = edges[j];
+				//tmp.pop_back(edges[j]);	
+			}
+		}
+	}
 
 	// Create disjoint sets
 	DisjointSets ds(V);
@@ -139,7 +150,7 @@ int main()
 	Graph g(V, E);
 
 	// making above shown graph
-	g.addEdge(0, 1, 4);
+	g.addEdge(0, 1, 4);//начало грани, конец грани, вес
 	g.addEdge(0, 7, 8);
 	g.addEdge(1, 2, 8);
 	g.addEdge(1, 7, 11);
