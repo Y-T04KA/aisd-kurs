@@ -6,14 +6,14 @@ using namespace std;
     
 class DisjointSet {
     int* parent;
-    int* rank;
+    int* size;
 public:
     DisjointSet(int n) {//тут мы инициализируем пустое подмножество на число вершин
         parent = new int[n];//тут какая вершина к кому относится
-        rank = new int[n];
+        size = new int[n];
         for (int i = 0; i < n; i++) {
             parent[i] = -1;//изначально каждая вершина относится сама к себе т.е является началом своего подможества
-            rank[i] = 1;
+            size[i] = 1;//размер подмножества, по умолчанию 1
         }
     }
     int find(int i) {//поиск начала подмножества, в котором находится i
@@ -23,13 +23,13 @@ public:
     void unite(int x, int y) {//склеивает подмножества
         int s1 = find(x), s2 = find(y);
         if (s1 != s2) {
-            if (rank[s1] < rank[s2]){//если подмножество s2 больше, то s1 присоединяется к нему
+            if (size[s1] < size[s2]){//если подмножество s2 больше, то s1 присоединяется к нему
                 parent[s1] = s2;
-                rank[s2] += rank[s1];
+                size[s2] += size[s1];
             }
             else {//и наоборот
                 parent[s2] = s1;
-                rank[s1] += rank[s2];
+                size[s1] += size[s2];
             }
         }
     }
@@ -44,7 +44,7 @@ public:
     Graph(int V) {
         this->V = V;
     }
-    void symboltest(int x) {//костыль для работы букв
+    void symboltest(int x) {
         if (x > 60 && x < 96) caster = 65; 
         else if (x > 96) caster = 97;
     }
@@ -53,7 +53,7 @@ public:
         symboltest(x);
         edgelist.push_back({ w,x-caster,y-caster});
     }
-    int kruskals_mst() {
+    int kruskal() {
         //тут сортировка, самый простой алгоритм
         for (int i = 0; i < edgelist.size(); i++) {
             for (int j = i; j < (edgelist.size()); j++) {
@@ -85,11 +85,11 @@ public:
 
 int fileRoutine() {
     ifstream File;
-    File.open("D:\\podelki\\aisd-kurs\\data1.txt");
+    File.open("D:\\podelki\\aisd-kurs\\data2.txt");
     if (!File.is_open())
     {
         cout << "File not found\n";
-        return 666;
+        return 0;
     }
     int y,count = 0;
     char x;//change to int for digital verticles
@@ -99,7 +99,7 @@ int fileRoutine() {
         File >> y;
         if (y > 1023) {
             cout << "too heavy verticle" << endl;
-            return 666;
+            return 0;
         }
         count++;
     }
@@ -118,7 +118,7 @@ int main()
     if (q == 0) return 7;//0 возвращается если с файлом что-то не так, тогда конец
     Graph g(q); //создаётся граф
     ifstream f;
-    f.open("D:\\podelki\\aisd-kurs\\data1.txt");
+    f.open("D:\\podelki\\aisd-kurs\\data2.txt");
     char x, y;//для вершин описанных цифрами поменять char на int и убрать 1 у data
     while (!f.eof()) {//читаем файл отсечками по 3 и добавляем в граф
         f >> x;
@@ -192,7 +192,7 @@ int main()
     g.addEdge('l', 'm', 4);*/
     
 
-    cout << g.kruskals_mst();
+    cout << g.kruskal();
     f.close();
 }
 
